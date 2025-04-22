@@ -1,0 +1,22 @@
+{
+  "version": "0.2",
+  "words": [
+    "bootstrapcdn",
+    "codeql",
+    "coliff",
+    "gohtml",
+    "gotmpl",
+    "gulpfile",
+    "jsdelivr",
+    "npmjs",
+    "Oliff",
+    "viewports"
+  ],
+  "language": "en,en-US",
+  "allowCompoundWords": true,
+  "ignorePaths": [
+    ".cspell.json",
+    "**/node_modules/**"
+  ],
+  "useGitignore": true
+}
