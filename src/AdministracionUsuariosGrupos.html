@@ -10,9 +10,9 @@
 
         <link type="image/x-icon" href="../../iconos/favicon.ico" rel="shortcut icon" />
         <link rel="stylesheet" type="text/css" href="../../lib/jquery/jquery.alerts.css">
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-SgOJa3DmI69IUzQ2PVdRZhwQ+dy64/BUtbMJw1MZ8t5HZApcHrRKUc4W0kG879m7" crossorigin="anonymous">
+        <link rel="stylesheet" type="text/css" href="../../lib/bootstrap/bootstrap-4.6.1/css/bootstrap.min.css">
         <link rel="stylesheet" type="text/css" href="../../lib/datatables/DataTables-1.11.3/css/dataTables.bootstrap4.min.css"/>
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/css/bootstrap-select.min.css">
+        <link rel="stylesheet" type="text/css" href="../../lib/bootstrap/bootstrap-select-1.13.14/css/bootstrap-select.min.css">
         <link rel="stylesheet" type="text/css" href="../../lib/font-awesome/css/all.min.css">
         <link rel="stylesheet" type="text/css" href="../../lib/toastr/toastr.min.css">
         <link rel="stylesheet" type="text/css" href="../../lib/datatables/datatables.responsive.css">
@@ -20,15 +20,15 @@
         <link rel="stylesheet" type="text/css" href="../../lib/bootstrap/bootstrap-4.6.1/css/bootstrap4-toggle.min.css">
         <link rel="stylesheet" type="text/css" href="../../modulos/SG/AdministracionUsuariosGrupos.css">
 
-        <script type="text/javascript" src="../../lib/jquery/jquery.min.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js" integrity="sha384-k6d4wzSIapyDyv1kpU366/PK5hCdSbCRGRCMv+eplOQJWyd1fbcAu9OCUj5zNLiq" crossorigin="anonymous"></script>
+        <script type="text/javascript" src="../../lib/jquery/jquery-3.6.0.min.js"></script>
+        <script type="text/javascript" src="../../lib/bootstrap/popper.min.js"></script>
         <script type="text/javascript" src="../../lib/bootstrap/moment.min.js"></script>
         <script type="text/javascript" src="../../lib/jquery/jquery.alerts.js"></script>
         <script type="text/javascript" src="../../lib/bootstrap/bootstrap-4.6.1/js/bootstrap4-toggle.min.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.min.js" integrity="sha384-VQqxDN0EQCkWoxt/0vsQvZswzTHUVOImccYmSyhJTp7kGtPed0Qcx8rK9h9YEgx+" crossorigin="anonymous"></script>
+        <script type="text/javascript" src="../../lib/bootstrap/bootstrap-4.6.1/js/bootstrap.min.js"></script>
         <script type="text/javascript" src="../../lib/datatables/DataTables-1.11.3/js/jquery.dataTables.min.js"></script>
         <script type="text/javascript" src="../../lib/datatables/DataTables-1.11.3/js/dataTables.bootstrap4.min.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/js/bootstrap-select.min.js"></script>
+        <script type="text/javascript" src="../../lib/bootstrap/bootstrap-select-1.13.14/js/bootstrap-select.min.js"></script>
         <script type="text/javascript" src="../../lib/bootstrap/es.js"></script>
         <script type="text/javascript" src="../../modulos/utilidades/js/utilidadesjQuery.js"></script>
         <script type="text/javascript" src="../../modulos/utilidades/js/JavaUtil.js"></script>
@@ -50,8 +50,8 @@
                 <div class="form-margin">
                     <div>
                         <span>Usuario</span>
-                        <div class="mb-3">
-                            <select id="usuarios" class="form-select inputBusqueda">
+                        <div class="form-group">
+                            <select id="usuarios" class="form-control inputBusqueda">
                                 <option value="0">Todos</option>
                             </select>
                         </div>
@@ -63,11 +63,11 @@
                 <div class="form-margin">
                     <div>
                         <span>Grupo</span>
-                        <div class="mb-3">
+                        <div class="form-group">
                             <input type="text" placeholder="-- Nombre --" class="form-control inputBusqueda" id="nombreGrupo" maxlength="100">
                         </div>
-                        <div class="mb-3">
-                            <select id="estado" class="form-select inputBusqueda">
+                        <div class="form-group">
+                            <select id="estado" class="form-control inputBusqueda">
                                 <option value="0">Todos</option>
                                 <option value="1" selected="">Activo</option>
                                 <option value="2">Inactivo</option>
@@ -80,7 +80,7 @@
                     <hr class="separator">
                     <div class="sidebar-section">
                         <span>Empresa Cliente</span>
-                        <div class="mb-3">
+                        <div class="form-group">
                             <select id="empresas"></select>
                         </div>
                     </div>
@@ -114,10 +114,10 @@
                                 <tr id="irAncla">
                                     <th class="text-center w9" colspan="3"  id="accionesGrupos">Acciones</th>
                                     <th class="text-center">ID</th>
-                                    <th class="text-start">Nombre</th>
-                                    <th class="text-start">Descripci&oacute;n</th>
-                                    <th class="text-start">Cantidad de usuarios</th>
-                                    <th class="text-start">Cantidad de flujos</th>
+                                    <th class="text-left">Nombre</th>
+                                    <th class="text-left">Descripci&oacute;n</th>
+                                    <th class="text-left">Cantidad de usuarios</th>
+                                    <th class="text-left">Cantidad de flujos</th>
                                 </tr>
                             </thead>
                             <tbody></tbody>
@@ -186,10 +186,10 @@
                             </div>
                         </div>
                         <div class="btn-modal-footer">
-                            <div class="text-end">
+                            <div class="text-right">
                                 <button type="button" class="btn btn-blue" id="registrar">Registrar</button>
                                 <button type="button" class="btn btn-blue oculto" id="actualizar">Actualizar</button>
-                                <button type="button" class="btn btn-purple" data-bs-dismiss="modal">Cerrar</button>
+                                <button type="button" class="btn btn-purple" data-dismiss="modal">Cerrar</button>
                             </div>
                         </div>
                     </div>
@@ -217,17 +217,17 @@
                                 <table id="tabla_usuarios" class = "table table-striped table-condensed table-hover">
                                     <thead>
                                         <tr>
-                                            <th class="text-start tituloModalTabla">Asignaci&oacute;n</th>
-                                            <th class="text-start tituloModalTabla">Usuario</th>
-                                            <th class="text-start tituloModalTabla">Supervisor</th>
+                                            <th class="text-left tituloModalTabla">Asignaci&oacute;n</th>
+                                            <th class="text-left tituloModalTabla">Usuario</th>
+                                            <th class="text-left tituloModalTabla">Supervisor</th>
                                         </tr>
                                     </thead>
                                 </table>
                             </div>
                         </div>
                         <div class="btn-modal-footer">
-                            <div class="text-end">
-                                <button type="button" class="btn btn-purple" data-bs-dismiss="modal">Cerrar</button>
+                            <div class="text-right">
+                                <button type="button" class="btn btn-purple" data-dismiss="modal">Cerrar</button>
                             </div>
                         </div>
                     </div>
@@ -263,8 +263,8 @@
                             </div>
                         </div>
                         <div class="btn-modal-footer">
-                            <div class="text-end">
-                                <button type="button" class="btn btn-purple" data-bs-dismiss="modal">Cerrar</button>
+                            <div class="text-right">
+                                <button type="button" class="btn btn-purple" data-dismiss="modal">Cerrar</button>
                             </div>
                         </div>
                     </div>
