@@ -33,31 +33,55 @@ async function migrate(cb) {
     src([`${options.src}/${options.defaultFileGlob}`], { base: options.overwrite ? './' : undefined })
       // CDNJS CSS
       .pipe(
-        replace(
-          /<script type=["']text\/javascript["'] src=["']\.\.\/\.\.\/lib\/bootstrap\/popper\.min\.js["']><\/script>/g,
-          function () {
-            CDNLinksChanged++;
-            return '<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>';
-          },
-        ),
+        replace(/<script type=["']text\/javascript["'] src=["']\.\.\/\.\.\/lib\/bootstrap\/popper\.min\.js["']><\/script>/g, function () {
+          CDNLinksChanged++;
+          return '<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>';
+        })
+      )
+      .pipe(
+        replace(/<link rel=["']stylesheet["'] type=["']text\/css["'] href=["']\.\.\/\.\.\/lib\/bootstrap\/bootstrap-4\.6\.1\/css\/bootstrap4-toggle\.min\.css["']>/g, function () {
+          CDNLinksChanged++;
+          return '<link href="https://cdn.jsdelivr.net/npm/bootstrap5-toggle@5.1.1/css/bootstrap5-toggle.min.css" rel="stylesheet">';
+        })
       )
       .pipe(
         replace(
-          /<script type=["']text\/javascript["'] src=["']\.\.\/\.\.\/lib\/jquery\/jquery\.min\.js["']><\/script>/g,
-          function () {
-            CDNLinksChanged++;
-            return '<script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>';
-          },
-        ),
+          /<link\s+rel=["']stylesheet["']\s+type=["']text\/css["']\s+href=["']\.\.\/\.\.\/lib\/datatables\/DataTables-1\.11\.3\/css\/dataTables\.bootstrap4\.min\.css["']\s*\/?>/g,
+          '<link rel="stylesheet" href="https://cdn.datatables.net/2.2.2/css/dataTables.dataTables.css" />'
+        )
+      )
+      .pipe(
+        replace(/<script type=["']text\/javascript["'] src=["']\.\.\/\.\.\/lib\/bootstrap\/bootstrap-4\.6\.1\/js\/bootstrap4-toggle\.min\.js["']><\/script>/g, function () {
+          CDNLinksChanged++;
+          return '<script src="https://cdn.jsdelivr.net/npm/bootstrap5-toggle@5.1.1/js/bootstrap5-toggle.jquery.min.js"></script>';
+        })
       )
       .pipe(
         replace(
-          /<script type=["']text\/javascript["'] src=["']\.\.\/\.\.\/lib\/bootstrap\/bootstrap-select-1\.13\.14\/js\/bootstrap-select\.min\.js["']><\/script>/g,
+          /<script\s+type=["']text\/javascript["']\s+src=["']\.\.\/\.\.\/lib\/datatables\/DataTables-1\.11\.3\/js\/dataTables\.bootstrap4\.min\.js["']><\/script>/g,
           function () {
             CDNLinksChanged++;
-            return '<script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.14.0-beta3/dist/js/bootstrap-select.min.js"></script>';
-          },
-        ),
+            return '<script src="https://cdn.datatables.net/2.2.2/js/dataTables.js"></script>';
+          }
+        )
+      )
+      .pipe(
+        replace(/<script type=["']text\/javascript["'] src=["']\.\.\/\.\.\/lib\/bootstrap\/popper\.min\.js["']><\/script>/g, function () {
+          CDNLinksChanged++;
+          return '<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>';
+        })
+      )
+      .pipe(
+        replace(/<script type=["']text\/javascript["'] src=["']\.\.\/\.\.\/lib\/jquery\/jquery\.min\.js["']><\/script>/g, function () {
+          CDNLinksChanged++;
+          return '<script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>';
+        })
+      )
+      .pipe(
+        replace(/<script type=["']text\/javascript["'] src=["']\.\.\/\.\.\/lib\/bootstrap\/bootstrap-select-1\.13\.14\/js\/bootstrap-select\.min\.js["']><\/script>/g, function () {
+          CDNLinksChanged++;
+          return '<script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.14.0-beta3/dist/js/bootstrap-select.min.js"></script>';
+        })
       )
       .pipe(
         replace(
@@ -65,626 +89,615 @@ async function migrate(cb) {
           function () {
             CDNLinksChanged++;
             return '<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.14.0-beta3/dist/css/bootstrap-select.min.css">';
-          },
-        ),
+          }
+        )
       )
       .pipe(
-        replace(
-          /<link rel=["']stylesheet["'] type=["']text\/css["'] href=["']\.\.\/\.\.\/lib\/bootstrap\/bootstrap-4\.6\.1\/css\/bootstrap\.min\.css["']>/g,
-          function () {
-            CDNLinksChanged++;
-            return '<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-SgOJa3DmI69IUzQ2PVdRZhwQ+dy64/BUtbMJw1MZ8t5HZApcHrRKUc4W0kG879m7" crossorigin="anonymous">';
-          },
-        ),
+        replace(/<link rel=["']stylesheet["'] type=["']text\/css["'] href=["']\.\.\/\.\.\/lib\/bootstrap\/bootstrap-4\.6\.1\/css\/bootstrap\.min\.css["']>/g, function () {
+          CDNLinksChanged++;
+          return '<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-SgOJa3DmI69IUzQ2PVdRZhwQ+dy64/BUtbMJw1MZ8t5HZApcHrRKUc4W0kG879m7" crossorigin="anonymous">';
+        })
       )
       .pipe(
-        replace(
-          /<script type=["']text\/javascript["'] src=["']\.\.\/\.\.\/lib\/bootstrap\/bootstrap-4\.6\.1\/js\/bootstrap\.min\.js["']><\/script>/g,
-          function () {
-            CDNLinksChanged++;
-            return '<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.min.js" integrity="sha384-VQqxDN0EQCkWoxt/0vsQvZswzTHUVOImccYmSyhJTp7kGtPed0Qcx8rK9h9YEgx+" crossorigin="anonymous"></script>';
-          },
-        ),
+        replace(/<script type=["']text\/javascript["'] src=["']\.\.\/\.\.\/lib\/bootstrap\/bootstrap-4\.6\.1\/js\/bootstrap\.min\.js["']><\/script>/g, function () {
+          CDNLinksChanged++;
+          return '<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.min.js" integrity="sha384-VQqxDN0EQCkWoxt/0vsQvZswzTHUVOImccYmSyhJTp7kGtPed0Qcx8rK9h9YEgx+" crossorigin="anonymous"></script>';
+        })
       )
       .pipe(
         replace(
           /\sdata-(animation|autohide|backdrop|boundary|container|content|custom-class|delay|dismiss|display|html|interval|keyboard|method|offset|pause|placement|popper-config|reference|ride|selector|slide(-to)?|target|template|title|toggle|touch|trigger|wrap)=/g,
           function (match, p1) {
-            if (p1 === 'toggle' && match.includes('data-bs-toggle="')) {
-              return match;
-            }
+            // if (p1 === 'toggle' && match.includes('data-bs-toggle="')) {
+            //   return match;
+            // }
             dataAttrChanged++;
             return ' data-bs-' + p1 + '=';
-          },
-        ),
+          }
+        )
       )
-      .pipe(
+      /* Se comenta porque la clase bs-toggle no existe en bootstrap-toggle-5
+        .pipe(
         replace(/\[data-toggle=/g, function () {
           dataAttrChanged++;
           return '[data-bs-toggle=';
-        }),
-      )
+        })
+      )*/
       .pipe(
         replace(/(<[^>]*class\s*=\s*['"][^'"]*)\bbadge-danger\b([^'"]*['"])/g, function (match, p1, p2) {
           cssClassChanged++;
           return p1 + 'text-bg-danger' + p2;
-        }),
+        })
       )
       .pipe(
         replace(/(<[^>]*class\s*=\s*['"][^'"]*)\bbadge-dark\b([^'"]*['"])/g, function (match, p1, p2) {
           cssClassChanged++;
           return p1 + 'text-bg-dark' + p2;
-        }),
+        })
       )
       .pipe(
         replace(/(<[^>]*class\s*=\s*['"][^'"]*)\bbadge-info\b([^'"]*['"])/g, function (match, p1, p2) {
           cssClassChanged++;
           return p1 + 'text-bg-info' + p2;
-        }),
+        })
       )
       .pipe(
-        replace(
-          /<div\s+class=(['"])divBotones\1>/g,
-          function () {
-            cssClassChanged++;
-            return '<div class="divBotones text-center">';
-          }
-        ),
+        replace(/<div\s+class=(['"])divBotones\1>/g, function () {
+          cssClassChanged++;
+          return '<div class="divBotones text-center">';
+        })
       )
       .pipe(
-        replace(
-          /(<div\b[^>]*\bclass\s*=\s*['"][^'"]*?)\btable-responsive\b([^'"]*['"])/g,
-          function (match, p1, p2) {
-            cssClassChanged++;
-            return p1 + 'table-responsive overflow-x-visible' + p2;
-          }
-        ),
+        replace(/(<div\b[^>]*\bclass\s*=\s*['"][^'"]*?)\btable-responsive\b([^'"]*['"])/g, function (match, p1, p2) {
+          cssClassChanged++;
+          return p1 + 'table-responsive overflow-x-visible' + p2;
+        })
       )
       .pipe(
         replace(/(<[^>]*class\s*=\s*['"][^'"]*)\bbadge-light\b([^'"]*['"])/g, function (match, p1, p2) {
           cssClassChanged++;
           return p1 + 'text-bg-light' + p2;
-        }),
+        })
       )
       .pipe(
         replace(/(<[^>]*class\s*=\s*['"][^'"]*)\bbadge-pill\b([^'"]*['"])/g, function (match, p1, p2) {
           cssClassChanged++;
           return p1 + 'rounded-pill' + p2;
-        }),
+        })
       )
       .pipe(
         replace(/(<[^>]*class\s*=\s*['"][^'"]*)\bbadge-primary\b([^'"]*['"])/g, function (match, p1, p2) {
           cssClassChanged++;
           return p1 + 'text-bg-primary' + p2;
-        }),
+        })
       )
       .pipe(
         replace(/(<[^>]*class\s*=\s*['"][^'"]*)\bbadge-secondary\b([^'"]*['"])/g, function (match, p1, p2) {
           cssClassChanged++;
           return p1 + 'text-bg-secondary' + p2;
-        }),
+        })
       )
       .pipe(
         replace(/(<[^>]*class\s*=\s*['"][^'"]*)\bbadge-success\b([^'"]*['"])/g, function (match, p1, p2) {
           cssClassChanged++;
           return p1 + 'text-bg-success' + p2;
-        }),
+        })
       )
       .pipe(
         replace(/(<[^>]*class\s*=\s*['"][^'"]*)\bbadge-warning\b([^'"]*['"])/g, function (match, p1, p2) {
           cssClassChanged++;
           return p1 + 'text-bg-warning' + p2;
-        }),
+        })
       )
       .pipe(
         replace(/(<[^>]*class\s*=\s*['"][^'"]*)\bborder-left\b([^'"]*['"])/g, function (match, p1, p2) {
           cssClassChanged++;
           return p1 + 'border-start' + p2;
-        }),
+        })
       )
       .pipe(
         replace(/(<[^>]*class\s*=\s*['"][^'"]*)\bborder-right\b([^'"]*['"])/g, function (match, p1, p2) {
           cssClassChanged++;
           return p1 + 'border-end' + p2;
-        }),
+        })
       )
       .pipe(
         replace(/(<[^>]*class\s*=\s*['"])\s*\bclose\b\s*(['"])/g, function (match, p1, p2) {
           cssClassChanged++;
           return p1 + 'btn-close' + p2;
-        }),
+        })
       )
       .pipe(
         replace(/(<[^>]*class\s*=\s*['"][^'"]*)\bcustom-control-input\b([^'"]*['"])/g, function (match, p1, p2) {
           cssClassChanged++;
           return p1 + 'form-check-input' + p2;
-        }),
+        })
       )
       .pipe(
         replace(/(<[^>]*class\s*=\s*['"][^'"]*)\bcustom-control-label\b([^'"]*['"])/g, function (match, p1, p2) {
           cssClassChanged++;
           return p1 + 'form-check-label' + p2;
-        }),
+        })
       )
       .pipe(
         replace(/(<[^>]*class\s*=\s*['"][^'"]*)\bcustom-control custom-checkbox\b([^'"]*['"])/g, function (match, p1, p2) {
           cssClassChanged++;
           return p1 + 'form-check' + p2;
-        }),
+        })
       )
       .pipe(
         replace(/(<[^>]*class\s*=\s*['"][^'"]*)\bcustom-control custom-radio\b([^'"]*['"])/g, function (match, p1, p2) {
           cssClassChanged++;
           return p1 + 'form-check' + p2;
-        }),
+        })
       )
       .pipe(
         replace(/(<[^>]*class\s*=\s*['"][^'"]*)\bcustom-file-input\b([^'"]*['"])/g, function (match, p1, p2) {
           cssClassChanged++;
           return p1 + 'form-control' + p2;
-        }),
+        })
       )
       .pipe(
         replace(/(<[^>]*class\s*=\s*['"][^'"]*)\bcustom-file-label\b([^'"]*['"])/g, function (match, p1, p2) {
           cssClassChanged++;
           return p1 + 'form-label' + p2;
-        }),
+        })
       )
       .pipe(
         replace(/(<[^>]*class\s*=\s*['"][^'"]*)\bcustom-range\b([^'"]*['"])/g, function (match, p1, p2) {
           cssClassChanged++;
           return p1 + 'form-range' + p2;
-        }),
+        })
       )
       .pipe(
         replace(/(<[^>]*class\s*=\s*['"][^'"]*)\bcustom-select-sm\b([^'"]*['"])/g, function (match, p1, p2) {
           cssClassChanged++;
           return p1 + 'form-select-sm' + p2;
-        }),
+        })
       )
       .pipe(
         replace(/(<[^>]*class\s*=\s*['"][^'"]*)\bcustom-select-lg\b([^'"]*['"])/g, function (match, p1, p2) {
           cssClassChanged++;
           return p1 + 'form-select-lg' + p2;
-        }),
+        })
       )
       .pipe(
         replace(/(<[^>]*class\s*=\s*['"][^'"]*)\bcustom-select\b([^'"]*['"])/g, function (match, p1, p2) {
           cssClassChanged++;
           return p1 + 'form-select' + p2;
-        }),
+        })
       )
       .pipe(
         replace(/(<[^>]*class\s*=\s*['"][^'"]*)\bcustom-control custom-switch\b([^'"]*['"])/g, function (match, p1, p2) {
           cssClassChanged++;
           return p1 + 'form-check form-switch' + p2;
-        }),
+        })
       )
       .pipe(
         replace(/(<[^>]*class\s*=\s*['"][^'"]*)\bdropdown-menu-left\b([^'"]*['"])/g, function (match, p1, p2) {
           cssClassChanged++;
           return p1 + 'dropdown-menu-start' + p2;
-        }),
+        })
       )
       .pipe(
         replace(/(<[^>]*class\s*=\s*['"][^'"]*)\bdropdown-menu-sm-left\b([^'"]*['"])/g, function (match, p1, p2) {
           cssClassChanged++;
           return p1 + 'dropdown-menu-sm-start' + p2;
-        }),
+        })
       )
       .pipe(
         replace(/(<[^>]*class\s*=\s*['"][^'"]*)\bdropdown-menu-md-left\b([^'"]*['"])/g, function (match, p1, p2) {
           cssClassChanged++;
           return p1 + 'dropdown-menu-md-start' + p2;
-        }),
+        })
       )
       .pipe(
         replace(/(<[^>]*class\s*=\s*['"][^'"]*)\bdropdown-menu-lg-left\b([^'"]*['"])/g, function (match, p1, p2) {
           cssClassChanged++;
           return p1 + 'dropdown-menu-lg-start' + p2;
-        }),
+        })
       )
       .pipe(
         replace(/(<[^>]*class\s*=\s*['"][^'"]*)\bdropdown-menu-xl-left\b([^'"]*['"])/g, function (match, p1, p2) {
           cssClassChanged++;
           return p1 + 'dropdown-menu-xl-start' + p2;
-        }),
+        })
       )
       .pipe(
         replace(/(<[^>]*class\s*=\s*['"][^'"]*)\bdropdown-menu-right\b([^'"]*['"])/g, function (match, p1, p2) {
           cssClassChanged++;
           return p1 + 'dropdown-menu-end' + p2;
-        }),
+        })
       )
       .pipe(
         replace(/(<[^>]*class\s*=\s*['"][^'"]*)\bdropdown-menu-sm-right\b([^'"]*['"])/g, function (match, p1, p2) {
           cssClassChanged++;
           return p1 + 'dropdown-menu-sm-end' + p2;
-        }),
+        })
       )
       .pipe(
         replace(/(<[^>]*class\s*=\s*['"][^'"]*)\bdropdown-menu-md-right\b([^'"]*['"])/g, function (match, p1, p2) {
           cssClassChanged++;
           return p1 + 'dropdown-menu-md-end' + p2;
-        }),
+        })
       )
       .pipe(
         replace(/(<[^>]*class\s*=\s*['"][^'"]*)\bdropdown-menu-lg-right\b([^'"]*['"])/g, function (match, p1, p2) {
           cssClassChanged++;
           return p1 + 'dropdown-menu-lg-end' + p2;
-        }),
+        })
       )
       .pipe(
         replace(/(<[^>]*class\s*=\s*['"][^'"]*)\bdropdown-menu-xl-right\b([^'"]*['"])/g, function (match, p1, p2) {
           cssClassChanged++;
           return p1 + 'dropdown-menu-xl-end' + p2;
-        }),
+        })
       )
       .pipe(
         replace(/(<[^>]*class\s*=\s*['"][^'"]*)\bdropleft\b([^'"]*['"])/g, function (match, p1, p2) {
           cssClassChanged++;
           return p1 + 'dropstart' + p2;
-        }),
+        })
       )
       .pipe(
         replace(/(<[^>]*class\s*=\s*['"][^'"]*)\bdropright\b([^'"]*['"])/g, function (match, p1, p2) {
           cssClassChanged++;
           return p1 + 'dropend' + p2;
-        }),
+        })
       )
       .pipe(
         replace(/(<[^>]*class\s*=\s*['"][^'"]*)\bfloat-left\b([^'"]*['"])/g, function (match, p1, p2) {
           cssClassChanged++;
           return p1 + 'float-start' + p2;
-        }),
+        })
       )
       .pipe(
         replace(/(<[^>]*class\s*=\s*['"][^'"]*)\bfloat-sm-left\b([^'"]*['"])/g, function (match, p1, p2) {
           cssClassChanged++;
           return p1 + 'float-sm-start' + p2;
-        }),
+        })
       )
       .pipe(
         replace(/(<[^>]*class\s*=\s*['"][^'"]*)\bfloat-md-left\b([^'"]*['"])/g, function (match, p1, p2) {
           cssClassChanged++;
           return p1 + 'float-md-start' + p2;
-        }),
+        })
       )
       .pipe(
         replace(/(<[^>]*class\s*=\s*['"][^'"]*)\bfloat-lg-left\b([^'"]*['"])/g, function (match, p1, p2) {
           cssClassChanged++;
           return p1 + 'float-lg-start' + p2;
-        }),
+        })
       )
       .pipe(
         replace(/(<[^>]*class\s*=\s*['"][^'"]*)\bfloat-xl-left\b([^'"]*['"])/g, function (match, p1, p2) {
           cssClassChanged++;
           return p1 + 'float-xl-start' + p2;
-        }),
+        })
       )
       .pipe(
         replace(/(<[^>]*class\s*=\s*['"][^'"]*)\bfloat-right\b([^'"]*['"])/g, function (match, p1, p2) {
           cssClassChanged++;
           return p1 + 'float-end' + p2;
-        }),
+        })
       )
       .pipe(
         replace(/(<[^>]*class\s*=\s*['"][^'"]*)\bfloat-sm-right\b([^'"]*['"])/g, function (match, p1, p2) {
           cssClassChanged++;
           return p1 + 'float-sm-end' + p2;
-        }),
+        })
       )
       .pipe(
         replace(/(<[^>]*class\s*=\s*['"][^'"]*)\bfloat-md-right\b([^'"]*['"])/g, function (match, p1, p2) {
           cssClassChanged++;
           return p1 + 'float-md-end' + p2;
-        }),
+        })
       )
       .pipe(
         replace(/(<[^>]*class\s*=\s*['"][^'"]*)\bfloat-lg-right\b([^'"]*['"])/g, function (match, p1, p2) {
           cssClassChanged++;
           return p1 + 'float-lg-end' + p2;
-        }),
+        })
       )
       .pipe(
         replace(/(<[^>]*class\s*=\s*['"][^'"]*)\bfloat-xl-right\b([^'"]*['"])/g, function (match, p1, p2) {
           cssClassChanged++;
           return p1 + 'float-xl-end' + p2;
-        }),
+        })
       )
       .pipe(
         replace(/(<[^>]*class\s*=\s*['"][^'"]*)\bfont-italic\b([^'"]*['"])/g, function (match, p1, p2) {
           cssClassChanged++;
           return p1 + 'fst-italic' + p2;
-        }),
+        })
       )
       .pipe(
         replace(/(<[^>]*class\s*=\s*['"][^'"]*)\bfont-weight-bold\b([^'"]*['"])/g, function (match, p1, p2) {
           cssClassChanged++;
           return p1 + 'fw-bold' + p2;
-        }),
+        })
       )
       .pipe(
         replace(/(<[^>]*class\s*=\s*['"][^'"]*)\bfont-weight-bolder\b([^'"]*['"])/g, function (match, p1, p2) {
           cssClassChanged++;
           return p1 + 'fw-bolder' + p2;
-        }),
+        })
       )
       .pipe(
         replace(/(<[^>]*class\s*=\s*['"][^'"]*)\bfont-weight-light\b([^'"]*['"])/g, function (match, p1, p2) {
           cssClassChanged++;
           return p1 + 'fw-light' + p2;
-        }),
+        })
       )
       .pipe(
         replace(/(<[^>]*class\s*=\s*['"][^'"]*)\bfont-weight-lighter\b([^'"]*['"])/g, function (match, p1, p2) {
           cssClassChanged++;
           return p1 + 'fw-lighter' + p2;
-        }),
+        })
       )
       .pipe(
         replace(/(<[^>]*class\s*=\s*['"][^'"]*)\bfont-weight-normal\b([^'"]*['"])/g, function (match, p1, p2) {
           cssClassChanged++;
           return p1 + 'fw-normal' + p2;
-        }),
+        })
       )
       .pipe(
         replace(/(<[^>]*class\s*=\s*['"][^'"]*)\bform-control-file\b([^'"]*['"])/g, function (match, p1, p2) {
           cssClassChanged++;
           return p1 + 'form-control' + p2;
-        }),
+        })
       )
       .pipe(
         replace(/(<[^>]*class\s*=\s*['"][^'"]*)\bform-control-range\b([^'"]*['"])/g, function (match, p1, p2) {
           cssClassChanged++;
           return p1 + 'form-range' + p2;
-        }),
+        })
       )
       .pipe(
         replace(/(<[^>]*class\s*=\s*['"][^'"]*)\bform-group\b([^'"]*['"])/g, function (match, p1, p2) {
           cssClassChanged++;
           return p1 + 'mb-3' + p2;
-        }),
+        })
       )
       .pipe(
         replace(/(<[^>]*class\s*=\s*['"][^'"]*)\bform-inline\b([^'"]*['"])/g, function (match, p1, p2) {
           cssClassChanged++;
           return p1 + 'd-flex align-items-center' + p2;
-        }),
+        })
       )
       .pipe(
         replace(/(<[^>]*class\s*=\s*['"][^'"]*)\bform-row\b([^'"]*['"])/g, function (match, p1, p2) {
           cssClassChanged++;
           return p1 + 'row' + p2;
-        }),
+        })
       )
       .pipe(
         replace(/(<[^>]*class\s*=\s*['"][^'"]*)\bjumbotron-fluid\b([^'"]*['"])/g, function (match, p1, p2) {
           cssClassChanged++;
           return p1 + 'rounded-0 px-0' + p2;
-        }),
+        })
       )
       .pipe(
         replace(/(<[^>]*class\s*=\s*['"][^'"]*)\bjumbotron\b([^'"]*['"])/g, function (match, p1, p2) {
           cssClassChanged++;
           return p1 + 'bg-light mb-4 rounded-2 py-5 px-3' + p2;
-        }),
+        })
       )
       .pipe(
         replace(/(<[^>]*class\s*=\s*['"][^'"]*)\bmedia-body\b([^'"]*['"])/g, function (match, p1, p2) {
           cssClassChanged++;
           return p1 + 'flex-grow-1' + p2;
-        }),
+        })
       )
       .pipe(
         replace(/(<[^>]*class\s*=\s*['"][^'"]*)\bmedia\b([^'"]*['"])/g, function (match, p1, p2) {
           cssClassChanged++;
           return p1 + 'd-flex' + p2;
-        }),
+        })
       )
       .pipe(
         replace(/(<[^>]*class\s*=\s*['"][^'"]*)\bml-\b([^'"]*['"])/g, function (match, p1, p2) {
           cssClassChanged++;
           return p1 + 'ms-' + p2;
-        }),
+        })
       )
       .pipe(
         replace(/(<[^>]*class\s*=\s*['"][^'"]*)\bml-n\b([^'"]*['"])/g, function (match, p1, p2) {
           cssClassChanged++;
           return p1 + 'ms-n' + p2;
-        }),
+        })
       )
       .pipe(
         replace(/(<[^>]*class\s*=\s*['"][^'"]*)\bmr-\b([^'"]*['"])/g, function (match, p1, p2) {
           cssClassChanged++;
           return p1 + 'me-' + p2;
-        }),
+        })
       )
       .pipe(
         replace(/(<[^>]*class\s*=\s*['"][^'"]*)\bmr-n\b([^'"]*['"])/g, function (match, p1, p2) {
           cssClassChanged++;
           return p1 + 'me-n' + p2;
-        }),
+        })
       )
       .pipe(
         replace(/(<[^>]*class\s*=\s*['"][^'"]*)\bno-gutters\b([^'"]*['"])/g, function (match, p1, p2) {
           cssClassChanged++;
           return p1 + 'g-0' + p2;
-        }),
+        })
       )
       .pipe(
         replace(/(<[^>]*class\s*=\s*['"][^'"]*)\bpl-\b([^'"]*['"])/g, function (match, p1, p2) {
           cssClassChanged++;
           return p1 + 'ps-' + p2;
-        }),
+        })
       )
       .pipe(
         replace(/(<[^>]*class\s*=\s*['"][^'"]*)\bpr-\b([^'"]*['"])/g, function (match, p1, p2) {
           cssClassChanged++;
           return p1 + 'pe-' + p2;
-        }),
+        })
       )
       .pipe(
         replace(/(<[^>]*class\s*=\s*['"][^'"]*)\bpre-scrollable\b([^'"]*['"])/g, function (match, p1, p2) {
           cssClassChanged++;
           return p1 + 'overflow-y-scroll' + p2;
-        }),
+        })
       )
       .pipe(
         replace(/(<[^>]*class\s*=\s*['"][^'"]*)\bembed-responsive-item\b([^'"]*['"])/g, function (match, p1, p2) {
           cssClassChanged++;
           return p1 + '' + p2;
-        }),
+        })
       )
       .pipe(
         replace(/(<[^>]*class\s*=\s*['"][^'"]*)\bembed-responsive-16by9\b([^'"]*['"])/g, function (match, p1, p2) {
           cssClassChanged++;
           return p1 + 'ratio-16x9' + p2;
-        }),
+        })
       )
       .pipe(
         replace(/(<[^>]*class\s*=\s*['"][^'"]*)\bembed-responsive-1by1\b([^'"]*['"])/g, function (match, p1, p2) {
           cssClassChanged++;
           return p1 + 'ratio-1x1' + p2;
-        }),
+        })
       )
       .pipe(
         replace(/(<[^>]*class\s*=\s*['"][^'"]*)\bembed-responsive-21by9\b([^'"]*['"])/g, function (match, p1, p2) {
           cssClassChanged++;
           return p1 + 'ratio-21x9' + p2;
-        }),
+        })
       )
       .pipe(
         replace(/(<[^>]*class\s*=\s*['"][^'"]*)\bembed-responsive-4by3\b([^'"]*['"])/g, function (match, p1, p2) {
           cssClassChanged++;
           return p1 + 'ratio-4x3' + p2;
-        }),
+        })
       )
       .pipe(
         replace(/(<[^>]*class\s*=\s*['"][^'"]*)\bembed-responsive\b([^'"]*['"])/g, function (match, p1, p2) {
           cssClassChanged++;
           return p1 + 'ratio' + p2;
-        }),
+        })
       )
       .pipe(
         replace(/(<[^>]*class\s*=\s*['"][^'"]*)\brounded-left\b([^'"]*['"])/g, function (match, p1, p2) {
           cssClassChanged++;
           return p1 + 'rounded-start' + p2;
-        }),
+        })
       )
       .pipe(
         replace(/(<[^>]*class\s*=\s*['"][^'"]*)\brounded-lg\b([^'"]*['"])/g, function (match, p1, p2) {
           cssClassChanged++;
           return p1 + 'rounded-3' + p2;
-        }),
+        })
       )
       .pipe(
         replace(/(<[^>]*class\s*=\s*['"][^'"]*)\brounded-right\b([^'"]*['"])/g, function (match, p1, p2) {
           cssClassChanged++;
           return p1 + 'rounded-end' + p2;
-        }),
+        })
       )
       .pipe(
         replace(/(<[^>]*class\s*=\s*['"][^'"]*)\brounded-sm\b([^'"]*['"])/g, function (match, p1, p2) {
           cssClassChanged++;
           return p1 + 'rounded-1' + p2;
-        }),
+        })
       )
       .pipe(
         replace(/(<[^>]*class\s*=\s*['"][^'"]*)\bsr-only sr-only-focusable\b([^'"]*['"])/g, function (match, p1, p2) {
           cssClassChanged++;
           return p1 + 'visually-hidden-focusable' + p2;
-        }),
+        })
       )
       .pipe(
         replace(/(<[^>]*class\s*=\s*['"][^'"]*)\bsr-only-focusable\b([^'"]*['"])/g, function (match, p1, p2) {
           cssClassChanged++;
           return p1 + 'visually-hidden-focusable' + p2;
-        }),
+        })
       )
       .pipe(
         replace(/(<[^>]*class\s*=\s*['"][^'"]*)\bsr-only\b([^'"]*['"])/g, function (match, p1, p2) {
           cssClassChanged++;
           return p1 + 'visually-hidden' + p2;
-        }),
+        })
       )
       .pipe(
         replace(/(<[^>]*class\s*=\s*['"][^'"]*)\btext-hide\b([^'"]*['"])/g, function (match, p1, p2) {
           cssClassChanged++;
           return p1 + 'd-none' + p2;
-        }),
+        })
       )
       .pipe(
         replace(/(<[^>]*class\s*=\s*['"][^'"]*)\btext-left\b([^'"]*['"])/g, function (match, p1, p2) {
           cssClassChanged++;
           return p1 + 'text-start' + p2;
-        }),
+        })
       )
       .pipe(
         replace(/(<[^>]*class\s*=\s*['"][^'"]*)\btext-sm-left\b([^'"]*['"])/g, function (match, p1, p2) {
           cssClassChanged++;
           return p1 + 'text-sm-start' + p2;
-        }),
+        })
       )
       .pipe(
         replace(/(<[^>]*class\s*=\s*['"][^'"]*)\btext-md-left\b([^'"]*['"])/g, function (match, p1, p2) {
           cssClassChanged++;
           return p1 + 'text-md-start' + p2;
-        }),
+        })
       )
       .pipe(
         replace(/(<[^>]*class\s*=\s*['"][^'"]*)\btext-lg-left\b([^'"]*['"])/g, function (match, p1, p2) {
           cssClassChanged++;
           return p1 + 'text-lg-start' + p2;
-        }),
+        })
       )
       .pipe(
         replace(/(<[^>]*class\s*=\s*['"][^'"]*)\btext-xl-left\b([^'"]*['"])/g, function (match, p1, p2) {
           cssClassChanged++;
           return p1 + 'text-xl-start' + p2;
-        }),
+        })
       )
       .pipe(
         replace(/(<[^>]*class\s*=\s*['"][^'"]*)\btext-right\b([^'"]*['"])/g, function (match, p1, p2) {
           cssClassChanged++;
           return p1 + 'text-end' + p2;
-        }),
+        })
       )
       .pipe(
         replace(/(<[^>]*class\s*=\s*['"][^'"]*)\btext-sm-right\b([^'"]*['"])/g, function (match, p1, p2) {
           cssClassChanged++;
           return p1 + 'text-sm-end' + p2;
-        }),
+        })
       )
       .pipe(
         replace(/(<[^>]*class\s*=\s*['"][^'"]*)\btext-md-right\b([^'"]*['"])/g, function (match, p1, p2) {
           cssClassChanged++;
           return p1 + 'text-md-end' + p2;
-        }),
+        })
       )
       .pipe(
         replace(/(<[^>]*class\s*=\s*['"][^'"]*)\btext-lg-right\b([^'"]*['"])/g, function (match, p1, p2) {
           cssClassChanged++;
           return p1 + 'text-lg-end' + p2;
-        }),
+        })
       )
       .pipe(
         replace(/(<[^>]*class\s*=\s*['"][^'"]*)\btext-xl-right\b([^'"]*['"])/g, function (match, p1, p2) {
           cssClassChanged++;
           return p1 + 'text-xl-end' + p2;
-        }),
+        })
       )
       .pipe(
         replace(/(<[^>]*class\s*=\s*['"][^'"]*)\btext-monospace\b([^'"]*['"])/g, function (match, p1, p2) {
           cssClassChanged++;
           return p1 + 'font-monospace' + p2;
-        }),
+        })
       )
       .pipe(
         replace(/(<[^>]*class\s*=\s*['"][^'"]*)\bwidth\b([^'"]*['"])/g, function (match, p1, p2) {
           cssClassChanged++;
           return p1 + 'collapse-horizontal' + p2;
-        }),
+        })
       )
       .pipe(replace(/<select([^>]*)\bclass=['"]([^'"]*)form-control(-lg|-sm)?([^'"]*)['"]([^>]*)>/g, '<select$1class="$2form-select$3$4"$5>'))
       .pipe(replace(/<select([^>]*)\bclass=['"]([^'"]*)form-control\b([^'"]*['"])/g, '<select$1class="$2form-select$3'))
