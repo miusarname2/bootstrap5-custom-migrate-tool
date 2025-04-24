@@ -26,7 +26,8 @@
   },
   "dependencies": {
     "gulp": "5.0.0",
-    "gulp-replace": "1.1.4"
+    "gulp-replace": "1.1.4",
+    "inquirer": "^8.2.6"
   },
   "files": [
     "gulpfile.js"
