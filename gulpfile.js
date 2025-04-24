@@ -33,10 +33,13 @@ async function migrate(cb) {
     src([`${options.src}/${options.defaultFileGlob}`], { base: options.overwrite ? './' : undefined })
       // CDNJS CSS
       .pipe(
-        replace(/<script type=["']text\/javascript["'] src=["']\.\.\/\.\.\/lib\/bootstrap\/popper\.min\.js["']><\/script>/g, function () {
-          CDNLinksChanged++;
-          return '<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>';
-        })
+        replace(
+          /<script\b(?:\s+type=['"]text\/javascript['"])?\s+src=['"](\.\.\/){2}lib\/bootstrap\/popper\.min\.js['"]><\/script>/g,
+          () => {
+            CDNLinksChanged++;
+            return '<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>';
+          }
+        )
       )
       .pipe(
         replace(/<link rel=["']stylesheet["'] type=["']text\/css["'] href=["']\.\.\/\.\.\/lib\/bootstrap\/bootstrap-4\.6\.1\/css\/bootstrap4-toggle\.min\.css["']>/g, function () {
@@ -46,7 +49,7 @@ async function migrate(cb) {
       )
       .pipe(
         replace(
-          /<link\s+rel=["']stylesheet["']\s+type=["']text\/css["']\s+href=["']\.\.\/\.\.\/lib\/datatables\/DataTables-1\.11\.3\/css\/dataTables\.bootstrap4\.min\.css["']\s*\/?>/g,
+          /<link\b(?:\s+rel=['"]stylesheet['"])?(?:\s+type=['"]text\/css['"])?\s+href=['"](\.\.\/){2}lib\/datatables\/DataTables-1\.11\.3\/css\/dataTables\.bootstrap4\.min\.css['"]\s*\/?>/g,
           '<link rel="stylesheet" href="https://cdn.datatables.net/2.2.2/css/dataTables.dataTables.css" />'
         )
       )
@@ -58,8 +61,8 @@ async function migrate(cb) {
       )
       .pipe(
         replace(
-          /<script\s+type=["']text\/javascript["']\s+src=["']\.\.\/\.\.\/lib\/datatables\/DataTables-1\.11\.3\/js\/dataTables\.bootstrap4\.min\.js["']><\/script>/g,
-          function () {
+          /<script\b(?:\s+type=['"]text\/javascript['"])?\s+src=['"](\.\.\/){2}lib\/datatables\/DataTables-1\.11\.3\/js\/dataTables\.bootstrap4\.min\.js['"]><\/script>/g,
+          () => {
             CDNLinksChanged++;
             return '<script src="https://cdn.datatables.net/2.2.2/js/dataTables.js"></script>';
           }
@@ -72,16 +75,22 @@ async function migrate(cb) {
         })
       )
       .pipe(
-        replace(/<script type=["']text\/javascript["'] src=["']\.\.\/\.\.\/lib\/jquery\/jquery\.min\.js["']><\/script>/g, function () {
-          CDNLinksChanged++;
-          return '<script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>';
-        })
+        replace(
+          /<script\b(?:\s+type=['"]text\/javascript['"])?\s+src=['"](\.\.\/){2}lib\/jquery\/jquery\.min\.js['"]><\/script>/g,
+          () => {
+            CDNLinksChanged++;
+            return '<script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>';
+          }
+        )
       )
       .pipe(
-        replace(/<script type=["']text\/javascript["'] src=["']\.\.\/\.\.\/lib\/bootstrap\/bootstrap-select-1\.13\.14\/js\/bootstrap-select\.min\.js["']><\/script>/g, function () {
-          CDNLinksChanged++;
-          return '<script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.14.0-beta3/dist/js/bootstrap-select.min.js"></script>';
-        })
+        replace(
+          /<script\b(?:\s+type=['"]text\/javascript['"])?\s+src=['"](\.\.\/){2}lib\/bootstrap\/bootstrap-select-1\.13\.14\/js\/bootstrap-select\.min\.js['"]><\/script>/g,
+          () => {
+            CDNLinksChanged++;
+            return '<script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.14.0-beta3/dist/js/bootstrap-select.min.js"></script>';
+          }
+        )
       )
       .pipe(
         replace(
@@ -99,18 +108,21 @@ async function migrate(cb) {
         })
       )
       .pipe(
-        replace(/<script type=["']text\/javascript["'] src=["']\.\.\/\.\.\/lib\/bootstrap\/bootstrap-4\.6\.1\/js\/bootstrap\.min\.js["']><\/script>/g, function () {
-          CDNLinksChanged++;
-          return '<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.min.js" integrity="sha384-VQqxDN0EQCkWoxt/0vsQvZswzTHUVOImccYmSyhJTp7kGtPed0Qcx8rK9h9YEgx+" crossorigin="anonymous"></script>';
-        })
+        replace(
+          /<script\b(?:\s+type=['"]text\/javascript['"])?\s+src=['"](\.\.\/){2}lib\/bootstrap\/bootstrap-4\.6\.1\/js\/bootstrap\.min\.js['"]><\/script>/g,
+          function () {
+            CDNLinksChanged++;
+            return '<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.min.js" integrity="sha384-VQqxDN0EQCkWoxt/0vsQvZswzTHUVOImccYmSyhJTp7kGtPed0Qcx8rK9h9YEgx+" crossorigin="anonymous"></script>';
+          }
+        )
       )
       .pipe(
         replace(
           /\sdata-(animation|autohide|backdrop|boundary|container|content|custom-class|delay|dismiss|display|html|interval|keyboard|method|offset|pause|placement|popper-config|reference|ride|selector|slide(-to)?|target|template|title|toggle|touch|trigger|wrap)=/g,
           function (match, p1) {
-            // if (p1 === 'toggle' && match.includes('data-bs-toggle="')) {
-            //   return match;
-            // }
+            if (p1 == 'dismiss') {
+              return match;
+            }
             dataAttrChanged++;
             return ' data-bs-' + p1 + '=';
           }
@@ -146,6 +158,15 @@ async function migrate(cb) {
           cssClassChanged++;
           return '<div class="divBotones text-center">';
         })
+      )
+      .pipe(
+        replace(
+          /<div\s+class=(['"])sidebar-buttons\1>/g,
+          function () {
+            cssClassChanged++;
+            return '<div class="sidebar-buttons text-center">';
+          }
+        )
       )
       .pipe(
         replace(/(<div\b[^>]*\bclass\s*=\s*['"][^'"]*?)\btable-responsive\b([^'"]*['"])/g, function (match, p1, p2) {
