@@ -802,6 +802,14 @@ async function migrate(cb) {
             });
           });
         }
+        const cmd = `npx jscodeshift -t replace-modal.js src/AdministracionUsuariosGrupos.js`;
+        await new Promise((resolve, reject) => {
+          exec(cmd, (err, stdout, stderr) => {
+            if (err) return reject(stderr);
+            if (options.verbose) console.log(stdout);
+            resolve();
+          });
+        });
         console.log('Transformaciones con jscodeshift completadas para todos los calendarios.');
       }
       cb();
