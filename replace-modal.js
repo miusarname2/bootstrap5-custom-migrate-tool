@@ -6,6 +6,7 @@ export default function transformer(file, api) {
     .find(j.ExpressionStatement)
     .filter(path => {
       const expr = path.node.expression;
+      // Only replace .modal calls with an options object, skip show/hide commands
       return (
         expr.type === 'CallExpression' &&
         expr.callee.type === 'MemberExpression' &&
@@ -15,7 +16,10 @@ export default function transformer(file, api) {
         expr.callee.object.arguments.length === 1 &&
         expr.callee.object.arguments[0].type === 'Literal' &&
         typeof expr.callee.object.arguments[0].value === 'string' &&
-        expr.callee.object.arguments[0].value.startsWith('#')
+        expr.callee.object.arguments[0].value.startsWith('#') &&
+        // Only match when first argument is an object (options), not a string action
+        expr.arguments.length > 0 &&
+        expr.arguments[0].type === 'ObjectExpression'
       );
     })
     .replaceWith(path => {
@@ -30,8 +34,8 @@ export default function transformer(file, api) {
         [j.literal(idValue)]
       );
 
-      // Options object passed to .modal(...)
-      const optionsArg = callExpr.arguments[0] || j.objectExpression([]);
+      // Options object passed to .modal({...})
+      const optionsArg = callExpr.arguments[0];
 
       // new bootstrap.Modal(document.getElementById('modalvideo'), {...})
       const newExpr = j.newExpression(
