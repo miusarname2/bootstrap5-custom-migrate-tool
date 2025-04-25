@@ -24,14 +24,22 @@ async function migrate(cb) {
 
   console.log(options);
 
-  const { removeTempus } = await inquirer.prompt([
+  const answers = await inquirer.prompt([
     {
       type: 'confirm',
       name: 'removeTempus',
       message: '¿Desea eliminar tempusdominus?',
       default: false
+    },
+    {
+      type: 'confirm',
+      name: 'addCalendar',
+      message: '¿Desea añadir el calendario de Tempus Dominus en el <head>?',
+      default: false
     }
   ]);
+
+  const { removeTempus, addCalendar } = answers;
 
   // process.exit(0)
 
@@ -737,6 +745,14 @@ async function migrate(cb) {
     .pipe(replace(/<select([^>]*)\bclass=['"]([^'"]*)form-control(-lg|-sm)?([^'"]*)['"]([^>]*)>/g, '<select$1class="$2form-select$3$4"$5>'))
     .pipe(replace(/<select([^>]*)\bclass=['"]([^'"]*)form-control\b([^'"]*['"])/g, '<select$1class="$2form-select$3'))
     .pipe(replace('<span aria-hidden="true">&times;</span>', ''));
+
+  if (addCalendar) {
+    const calendarLink = '<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@eonasdan/tempus-dominus@6.9.4/dist/css/tempus-dominus.min.css" crossorigin="anonymous">';
+    const calendarScript = '<script src="https://cdn.jsdelivr.net/npm/@eonasdan/tempus-dominus@6.9.4/dist/js/tempus-dominus.min.js" crossorigin="anonymous"></script>';
+    stream = stream.pipe(
+      replace(/<head>/g, match => `${match}\n        ${calendarLink}\n        ${calendarScript}`)
+    );
+  }
 
   if (removeTempus) {
     stream = stream
