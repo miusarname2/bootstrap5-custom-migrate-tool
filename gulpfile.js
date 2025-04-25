@@ -1,6 +1,7 @@
 const replace = require('gulp-replace');
-const { src, dest } = require('gulp');
 const inquirer = require('inquirer');
+const { exec } = require('child_process');
+const { src, dest, task, series } = require('gulp');
 
 /**
  * Options that may be set via cli flags \
@@ -40,6 +41,15 @@ async function migrate(cb) {
   ]);
 
   const { removeTempus, addCalendar } = answers;
+
+  let calendarIds = [];
+  if (addCalendar) {
+    const { count } = await inquirer.prompt([{ type: 'number', name: 'count', message: '¿Cuántos calendarios desea inicializar?', default: 1, validate: v => Number.isInteger(v) && v > 0 || 'Debe ser un número entero mayor que 0' }]);
+    for (let i = 1; i <= count; i++) {
+      const { id } = await inquirer.prompt([{ type: 'input', name: 'id', message: `Dame el id del calendario ${i}`, validate: v => !!v || 'El id no puede estar vacío' }]);
+      calendarIds.push(id);
+    }
+  }
 
   // process.exit(0)
 
@@ -749,9 +759,7 @@ async function migrate(cb) {
   if (addCalendar) {
     const calendarLink = '<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@eonasdan/tempus-dominus@6.9.4/dist/css/tempus-dominus.min.css" crossorigin="anonymous">';
     const calendarScript = '<script src="https://cdn.jsdelivr.net/npm/@eonasdan/tempus-dominus@6.9.4/dist/js/tempus-dominus.min.js" crossorigin="anonymous"></script>';
-    stream = stream.pipe(
-      replace(/<head>/g, match => `${match}\n        ${calendarLink}\n        ${calendarScript}`)
-    );
+    stream = stream.pipe(replace(/<head>/g, match => `${match}\n        ${calendarLink}\n        ${calendarScript}`));
   }
 
   if (removeTempus) {
@@ -779,50 +787,43 @@ async function migrate(cb) {
         console.log(`Wrote file: ${data.path}`);
       }
     })
-    .on('end', function () {
+    .on('end', async () => {
       console.log(`Completed! Changed ${cssClassChanged} CSS class names, ${dataAttrChanged} data-attributes and ${CDNLinksChanged} CDN links.`);
+      // Ejecutar jscodeshift para cada id de calendario
+      if (addCalendar && calendarIds.length) {
+        for (const id of calendarIds) {
+          const cmd = `npx jscodeshift -t replace-datetimepicker.js --id ${id} src/AdministracionUsuariosGrupos.js`;
+          console.log(cmd);
+          await new Promise((resolve, reject) => {
+            exec(cmd, (err, stdout, stderr) => {
+              if (err) return reject(stderr);
+              if (options.verbose) console.log(stdout);
+              resolve();
+            });
+          });
+        }
+        console.log('Transformaciones con jscodeshift completadas para todos los calendarios.');
+      }
       cb();
     });
 }
 
 /** parses cli args array and return an options object */
 function parseArgs() {
-  const options = Object.assign({}, DEFAULT_OPTIONS);
+  const options = { ...DEFAULT_OPTIONS };
   const argv = process.argv;
-
   argv.forEach((flag, i) => {
     const value = argv[i + 1];
     switch (flag) {
-      case '--src': {
-        options.src = value;
-        break;
-      }
-      case '--dest': {
-        options.dest = value;
-        break;
-      }
-      case '--glob': {
-        options.defaultFileGlob = value;
-        break;
-      }
-      case '--overwrite': {
-        options.overwrite = true;
-        options.dest = './';
-        if (argv.includes('--dest')) {
-          throw new Error('Cannot use --overwrite and --dest options together.');
-        }
-        break;
-      }
-      case '--verbose': {
-        options.verbose = true;
-        break;
-      }
-      default:
-        break;
+      case '--src': options.src = value; break;
+      case '--dest': options.dest = value; break;
+      case '--glob': options.defaultFileGlob = value; break;
+      case '--overwrite': options.overwrite = true; options.dest = './'; if (argv.includes('--dest')) throw new Error('Cannot use --overwrite and --dest together.'); break;
+      case '--verbose': options.verbose = true; break;
+      default: break;
     }
   });
-
   return options;
 }
 
-exports.migrate = migrate;
+task('migrate', migrate);
