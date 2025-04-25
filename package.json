@@ -26,6 +26,7 @@
   },
   "dependencies": {
     "gulp": "5.0.0",
+    "gulp-if": "^3.0.0",
     "gulp-replace": "1.1.4",
     "inquirer": "^8.2.6",
     "jscodeshift": "^17.3.0",
