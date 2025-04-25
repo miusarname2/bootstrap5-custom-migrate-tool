@@ -1,4 +1,5 @@
 const replace = require('gulp-replace');
+const gulpIf = require('gulp-if');
 const inquirer = require('inquirer');
 const { exec } = require('child_process');
 const { src, dest, task, series } = require('gulp');
@@ -759,7 +760,28 @@ async function migrate(cb) {
   if (addCalendar) {
     const calendarLink = '<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@eonasdan/tempus-dominus@6.9.4/dist/css/tempus-dominus.min.css" crossorigin="anonymous">';
     const calendarScript = '<script src="https://cdn.jsdelivr.net/npm/@eonasdan/tempus-dominus@6.9.4/dist/js/tempus-dominus.min.js" crossorigin="anonymous"></script>';
-    stream = stream.pipe(replace(/<head>/g, match => `${match}\n        ${calendarLink}\n        ${calendarScript}`));
+
+    // Flag que indica si encontramos y reemplazamos el <script> viejo
+    let foundOldScript = false;
+
+    stream = stream
+      // 1) Intentamos sustituir el script viejo
+      .pipe(replace(
+        /<script\b[^>]*tempusdominus-bootstrap-4\.min\.js[^>]*><\/script>/g,
+        match => {
+          foundOldScript = true;
+          // Reemplazamos directamente por link+script
+          return `${calendarLink}\n        ${calendarScript}`;
+        }
+      ))
+      // 2) Si no había script viejo, inyectamos en <head>
+      .pipe(gulpIf(
+        () => !foundOldScript,
+        replace(
+          /<head>/g,
+          match => `${match}\n        ${calendarLink}\n        ${calendarScript}`
+        )
+      ));
   }
 
   if (removeTempus) {
@@ -802,16 +824,16 @@ async function migrate(cb) {
             });
           });
         }
-        const cmd = `npx jscodeshift -t replace-modal.js src/AdministracionUsuariosGrupos.js`;
-        await new Promise((resolve, reject) => {
-          exec(cmd, (err, stdout, stderr) => {
-            if (err) return reject(stderr);
-            if (options.verbose) console.log(stdout);
-            resolve();
-          });
-        });
         console.log('Transformaciones con jscodeshift completadas para todos los calendarios.');
       }
+      const cmd = `npx jscodeshift -t replace-modal.js src/AdministracionUsuariosGrupos.js`;
+      await new Promise((resolve, reject) => {
+        exec(cmd, (err, stdout, stderr) => {
+          if (err) return reject(stderr);
+          if (options.verbose) console.log(stdout);
+          resolve();
+        });
+      });
       cb();
     });
 }
