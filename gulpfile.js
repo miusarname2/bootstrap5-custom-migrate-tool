@@ -153,9 +153,6 @@ async function migrate(cb) {
       replace(
         /\sdata-(animation|autohide|backdrop|boundary|container|content|custom-class|delay|dismiss|display|html|interval|keyboard|method|offset|pause|placement|popper-config|reference|ride|selector|slide(-to)?|target|template|title|toggle|touch|trigger|wrap)=/g,
         function (match, p1) {
-          if (p1 == 'dismiss') {
-            return match;
-          }
           dataAttrChanged++;
           return ' data-bs-' + p1 + '=';
         }
@@ -829,6 +826,14 @@ async function migrate(cb) {
       const cmd = `npx jscodeshift -t replace-modal.js src/AdministracionUsuariosGrupos.js`;
       await new Promise((resolve, reject) => {
         exec(cmd, (err, stdout, stderr) => {
+          if (err) return reject(stderr);
+          if (options.verbose) console.log(stdout);
+          resolve();
+        });
+      });
+      const cmde = `npx jscodeshift -t replace-datatable.js src/AdministracionUsuariosGrupos.js`;
+      await new Promise((resolve, reject) => {
+        exec(cmde, (err, stdout, stderr) => {
           if (err) return reject(stderr);
           if (options.verbose) console.log(stdout);
           resolve();
